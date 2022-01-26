@@ -1,0 +1,4 @@
+BankServer/lib/*
+BankServer/bin/*
+BankServer/__pycache__/*
+BankServer/include/*

@@ -1,0 +1,7 @@
+CREATE TABLE USER(
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   user_name        TEXT                NOT NULL,
+   balance          INT     DEFAULT 0   NOT NULL,
+   password_hash    CHAR(256)
+);
+
