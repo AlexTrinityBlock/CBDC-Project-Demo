@@ -1,11 +1,12 @@
 # Scripts\activate.bat
 # flask run --host=0.0.0.0
 # pip install -r requirements.txt 
+from locale import currency
 import flask
-import SQLiteUtil
 import CryptUtil
 import AccountUtil
 import CurrencyUtil
+import SQLiteUtil
 import json
 import os
 from flask import render_template,Flask,session,request
@@ -35,9 +36,23 @@ def getCurrency():
         user_rsa_public_key=CryptUtil.Base64StringToBytes(request.values['user_rsa_public_key'])
         plain_user_input=(CryptUtil.RSAdecrypto(CryptUtil.Base64StringToBytes(cipher_user_input),CryptUtil.readBytes("PrivateKey.pem"))).decode("utf-8")
         user_input_json=json.loads(plain_user_input)
-        if AccountUtil.checkUserPassword(user_input_json["user_name"],user_input_json["user_password"]):
+        user_name=user_input_json["user_name"]
+        if AccountUtil.checkUserPassword(user_name,user_input_json["user_password"]):
+            currencyList=list()
+            cipherCurrencyList=list()
+
+            for i in range(user_input_json["withdrawal_number"]):
+                currencyList.append(CurrencyUtil.issueNewCurrency())
+                SQLiteUtil.decreaseBalanceByUserName(user_name)
+
+            for plainCurrency in currencyList:
+                cipherCurrency=CryptUtil.RSAencrypto(bytes(plainCurrency,"utf-8"),user_rsa_public_key)
+                cipherCurrencyList.append(CryptUtil.bytesToBase64String(cipherCurrency))
+
+
             result={
-                "Status":"Success"            
+                "Status":"Success",
+                "cipher_currency": cipherCurrencyList     
             }
         else:
             result={
@@ -46,7 +61,7 @@ def getCurrency():
 
     except Exception as e:
         result="[server] Error"+str(e)
-    return result
+    return json.dumps(result)
 
 
 
@@ -70,8 +85,5 @@ def getCurrency():
 #     return str1
 
 if __name__ == '__main__':
-    # app.run()
-    SQLiteUtil.createNewDatabase()
-    SQLiteUtil.creatExampleUser()
-    print(SQLiteUtil.getPasswordHash("Alice"))
-    print(CryptUtil.bytesToBase64String(CryptUtil.StringSHA256("abc")))
+    app.run()
+

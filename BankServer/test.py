@@ -1,8 +1,13 @@
 import requests
 import json
 import CryptUtil
+import SQLiteUtil
 
 #Get Public key
+
+#UserID
+user_name="Alice"
+user_uuid="30a1bf87-b0e1-4921-a0b8-8c602af1f391"
 
 #User Key Pair
 keyPair=CryptUtil.RSAKeyPair()
@@ -20,7 +25,7 @@ serverPublicKey= CryptUtil.Base64StringToBytes(responseJSON["PublicKey"])
 user_input={
     "user_name":"Alice",
     "user_password":"abc",
-    # "withdrawal_number":"1",
+    "withdrawal_number":3,
 }
 user_input_bytes=bytes(json.dumps(user_input),"utf-8")
 CipherText=CryptUtil.RSAencrypto(user_input_bytes,serverPublicKey)
