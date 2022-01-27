@@ -28,7 +28,7 @@ def createNewDatabase():
     conn=None
     conn = sqlite3.connect("./database/bank.db")
     c = conn.cursor()
-    c.execute(SQLQuery)
+    c.executescript(SQLQuery)
     conn.close()
 
 #https://www.tutorialspoint.com/sqlalchemy/sqlalchemy_quick_guide.htm

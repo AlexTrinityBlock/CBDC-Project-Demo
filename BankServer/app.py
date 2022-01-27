@@ -3,9 +3,10 @@
 # pip install -r requirements.txt 
 import flask
 import SQLiteUtil
-import uuid
-import json
 import CryptUtil
+import AccountUtil
+import CurrencyUtil
+import json
 import os
 from flask import render_template,Flask,session,request
 from datetime import timedelta
@@ -14,38 +15,35 @@ app = flask.Flask(__name__)
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=1)
 app.config['SECRET_KEY'] = os.urandom(24)
 
-@app.route('/public-key')
-def transportPBK():
+@app.route('/public-key/user/withdraw',methods=['GET'])
+def transportPubblicKey():
     result:dict
     try:
-        publicKeyBase64=CryptUtil.bytesToBase64String(CryptUtil.readBytes("PrivateKey.pem"))
+        publicKeyBase64=CryptUtil.bytesToBase64String(CryptUtil.readBytes("PublicKey.pem"))
         result={
             "PublicKey":publicKeyBase64
         }
     except:
         result="[server]Public Key no found,try to use CryptUtil.RSAKeyPairFilesGenerator()"
     return json.dumps(result)
-
-@app.route('/login',methods=['POST'])
-def login():
+    
+@app.route('/get-currency',methods=['POST'])
+def getCurrency():
     result=dict()
     try:
-        #
-        userName:str=request.values['user_name']
-        userInputPassword=request.values['user_password']
-        userPasswordHash=SQLiteUtil.getPasswordHash(userName)
-        userInputPasswordHash=CryptUtil.bytesToBase64String(CryptUtil.StringSHA256(userInputPassword))
-        if userPasswordHash==userInputPasswordHash and userInputPassword!="" :
-            session["user_id"]=SQLiteUtil.getUserID(userName)
+        cipher_user_input:str=request.values['cipher_user_input']
+        user_rsa_public_key=CryptUtil.Base64StringToBytes(request.values['user_rsa_public_key'])
+        plain_user_input=(CryptUtil.RSAdecrypto(CryptUtil.Base64StringToBytes(cipher_user_input),CryptUtil.readBytes("PrivateKey.pem"))).decode("utf-8")
+        user_input_json=json.loads(plain_user_input)
+        if AccountUtil.checkUserPassword(user_input_json["user_name"],user_input_json["user_password"]):
             result={
-                "status":"True",
-                "session":session["user_id"]
+                "Status":"Success"            
             }
         else:
             result={
-                "status":"False",
+                "Status":"Fail"            
             }
-        #
+
     except Exception as e:
         result="[server] Error"+str(e)
     return result
