@@ -3,3 +3,9 @@ BankServer/bin/*
 BankServer/__pycache__/*
 BankServer/include/*
 BankServer/pyvenv.cfg
+
+StoreServer/lib/*
+StoreServer/bin/*
+StoreServer/__pycache__/*
+StoreServer/include/*
+StoreServer/pyvenv.cfg
