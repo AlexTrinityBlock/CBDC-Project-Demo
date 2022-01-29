@@ -87,7 +87,6 @@ def updateBalanceByUserName(userName:str="",newBalance:int=None):
 
 def decreaseBalanceByUserName(userName:str):
     oldBalance=getBalanceByUserName(userName)
-    print("Old balance",oldBalance)
     updateBalanceByUserName(userName,oldBalance-1)
 
 def getUserIDByUserName(userNme:str=""):

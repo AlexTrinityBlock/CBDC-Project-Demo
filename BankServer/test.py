@@ -31,4 +31,11 @@ user_input_bytes=bytes(json.dumps(user_input),"utf-8")
 CipherText=CryptUtil.RSAencrypto(user_input_bytes,serverPublicKey)
 CipherTextB64=CryptUtil.bytesToBase64String(CipherText)
 responseText=requestSessionObject.post('http://127.0.0.1:5000/get-currency',data={'cipher_user_input': CipherTextB64,'user_rsa_public_key':CryptUtil.bytesToBase64String(UserPublicKey)}).text
-print(responseText)
+
+#User decrypt bank response
+BanReturnCurrencyJson = json.loads(responseText)
+currencyList=list()
+cipherCurrencyList=BanReturnCurrencyJson["cipher_currency"]
+for currencyBase64 in cipherCurrencyList:
+    currencyList.append(CryptUtil.Base64RSADecrypt(currencyBase64,CryptUtil.bytesToBase64String(UserPrivateKey)))
+print(currencyList)
