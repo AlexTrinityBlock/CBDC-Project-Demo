@@ -2,10 +2,17 @@ import requests
 import json
 import CryptUtil
 import SQLiteUtil
+import string    
+import random
 
 #Bank URL
 BankPublicKeyURL:str='http://127.0.0.1:8080/public-key/user/withdraw'
 BankGetCurrencyURL:str='http://127.0.0.1:8080/get-currency'
+
+#Store URL
+StorePublicKey="http://127.0.0.1:7070/store/public-key/"
+StoreStartTransactionURL="http://127.0.0.1:7070/start-transaction/get-binary-string"
+
 
 #Currency List
 currencyList=list()
@@ -19,15 +26,18 @@ keyPair=CryptUtil.RSAKeyPair()
 UserPublicKey=keyPair["PublicKey"]
 UserPrivateKey=keyPair["PrivateKey"]
 
+def randomString(S):
+    return  ''.join(random.choices(string.ascii_letters + string.digits, k = S))
 
-#User get bank's public key
-requestSessionObject=requests.Session()
-responseObeject = requestSessionObject.get(BankPublicKeyURL)
-responseJSON=json.loads(responseObeject.text)
-serverPublicKey= CryptUtil.Base64StringToBytes(responseJSON["PublicKey"])
-
+def StringXOR():
+    return
 
 def GetCurrency():
+    #User get bank's public key
+    requestSessionObject=requests.Session()
+    responseObeject = requestSessionObject.get(BankPublicKeyURL)
+    responseJSON=json.loads(responseObeject.text)
+    serverPublicKey= CryptUtil.Base64StringToBytes(responseJSON["PublicKey"])
     #User send to bank for withdraw
     user_input={
         "user_name":"Alice",
@@ -49,5 +59,25 @@ def GetCurrency():
 
     print("===============Get Currency===============\n",json.dumps(currencyList, indent=4, sort_keys=True),"\n===================================\n")
 
+#Send to Store
+def SendToStroe():
+    #User get store's public key
+    serverPublicKey=bytes()
+    binaryString = str()
+    requestSessionObject=requests.Session()
+    responseObeject = requestSessionObject.get(StorePublicKey)
+    responseJSON=json.loads(responseObeject.text)
+    serverPublicKey= CryptUtil.Base64StringToBytes(responseJSON["PublicKey"])
+    #Get binary String
+    responseObeject=requestSessionObject.get(StoreStartTransactionURL)
+    binaryString=responseObeject.text
+    print(len(user_uuid))
+
+    
+
+
+
 if __name__ == '__main__':
-    GetCurrency()
+    # GetCurrency()
+    # SendToStroe()
+    print(randomString(36))
