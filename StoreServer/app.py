@@ -71,7 +71,7 @@ def StartTransaction():
     session["RandomBinaryString"]=None
     session["ClientStart"]=None
     session["ClientStart"]="True"
-    session["RandomBinaryString"]=VerifyUtil.randomBinaryString(2)
+    session["RandomBinaryString"]=VerifyUtil.randomBinaryString(10)
     return session["RandomBinaryString"]
 
 @app.route('/get-currency',methods=['GET'])

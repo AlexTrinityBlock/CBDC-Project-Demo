@@ -1,3 +1,4 @@
+from unittest import result
 import requests
 import json
 import CryptUtil
@@ -29,8 +30,11 @@ UserPrivateKey=keyPair["PrivateKey"]
 def randomString(S):
     return  ''.join(random.choices(string.ascii_letters + string.digits, k = S))
 
-def StringXOR():
-    return
+def StringXOR(String1:str,String2:str):
+    bytes1=String1.encode("utf-8")
+    bytes2=String2.encode("utf-8")
+    bytesXORed=bytes(a ^ b for a, b in zip(bytes1, bytes2))
+    return CryptUtil.bytesToBase64String(bytesXORed)
 
 def GetCurrency():
     #User get bank's public key
@@ -61,17 +65,44 @@ def GetCurrency():
 
 #Send to Store
 def SendToStroe():
-    #User get store's public key
+    #init
     serverPublicKey=bytes()
     binaryString = str()
+    randomStrings=[]
+
+    #init random number
+    for i in range(10):
+        randomStrings.append(randomString(36))
+
+    #User get store's public key
     requestSessionObject=requests.Session()
     responseObeject = requestSessionObject.get(StorePublicKey)
     responseJSON=json.loads(responseObeject.text)
     serverPublicKey= CryptUtil.Base64StringToBytes(responseJSON["PublicKey"])
+
     #Get binary String
     responseObeject=requestSessionObject.get(StoreStartTransactionURL)
     binaryString=responseObeject.text
-    print(len(user_uuid))
+
+    #XOR  follow Binary String to XOR UserID with Random Value
+    resultList=list()
+    counter=0
+    for binaryChart in binaryString:
+        if(binaryChart=="0"):
+            resultList.append(randomStrings[counter])
+        else:
+            resultList.append(StringXOR(randomStrings[counter],user_uuid))
+        counter+=1
+
+    #Return Hidden user info to store
+    result={
+        ""
+    }
+
+
+
+    
+    
 
     
 
@@ -79,5 +110,6 @@ def SendToStroe():
 
 if __name__ == '__main__':
     # GetCurrency()
-    # SendToStroe()
-    print(randomString(36))
+    SendToStroe()
+    # print(randomString(36))
+    # print(StringXOR(randomString(36),randomString(36)))
