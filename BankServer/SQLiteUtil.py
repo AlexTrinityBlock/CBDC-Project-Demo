@@ -87,7 +87,10 @@ def updateBalanceByUserName(userName:str="",newBalance:int=None):
 
 def decreaseBalanceByUserName(userName:str):
     oldBalance=getBalanceByUserName(userName)
-    updateBalanceByUserName(userName,oldBalance-1)
+    if oldBalance >0:
+        updateBalanceByUserName(userName,oldBalance-1)
+    else:
+        raise Exception("Balance = 0")
 
 def getUserIDByUserName(userNme:str=""):
     s=userTable.select().where(userTable.c.user_name==userNme)

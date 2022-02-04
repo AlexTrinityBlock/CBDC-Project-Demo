@@ -30,7 +30,6 @@ def createNewDatabase():
     c.execute(SQLQuery)
     conn.close()
 
-#https://www.tutorialspoint.com/sqlalchemy/sqlalchemy_quick_guide.htm
 def insertTrade(hidden_user_info_i:str,digital_currency_i:str):
     ins = storeWalletTable.insert().values(hidden_user_info=hidden_user_info_i,digital_currency=digital_currency_i)
     conn = engine.connect()
