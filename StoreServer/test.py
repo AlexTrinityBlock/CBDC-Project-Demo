@@ -9,5 +9,5 @@ if __name__ == '__main__':
     # SQLiteUtil.insertTrade("AAA","BBB")
     # publicKeyBase64=CryptUtil.bytesToBase64String(CryptUtil.readBytes("PublicKey.pem"))
     # print(publicKeyBase64)
-    # SQLiteUtil.findCurrencyWithoutDeposited()
-    DepositUtil.Deposit()
+    SQLiteUtil.getCurrencyNotYetDepositForFrontEnd()
+    # DepositUtil.Deposit()

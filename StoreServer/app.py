@@ -19,6 +19,12 @@ app.config['SECRET_KEY'] = os.urandom(24)
 publicKeyBase64=CryptUtil.bytesToBase64String(CryptUtil.readBytes("PublicKey.pem"))
 privateKeyBase64=CryptUtil.bytesToBase64String(CryptUtil.readBytes("PrivateKey.pem"))
 
+@app.route('/',methods=['GET'])
+def homePage():
+    NotDepositedYetCurrencys=SQLiteUtil.getCurrencyNotYetDepositForFrontEnd()
+    CurrencysDeposited=SQLiteUtil.getCurrencyDepositedForFrontEnd()
+    return render_template('index.html',NotDepositedYetCurrencys=NotDepositedYetCurrencys,CurrencysDeposited=CurrencysDeposited) 
+
 @app.route('/store/public-key/',methods=['GET'])
 def getStorePublicKey():
     result={

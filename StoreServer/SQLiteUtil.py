@@ -1,11 +1,13 @@
 from ctypes.wintypes import INT
 import sqlite3
 import os
+from itsdangerous import json
 import sqlalchemy
 import CryptUtil
 from sqlalchemy.orm import Session
 from sqlalchemy import Table, Column, Integer, String, MetaData
 from sqlalchemy.orm import sessionmaker
+import json
 
 engine = sqlalchemy.create_engine('sqlite:///./database/store.db')
 connection = engine.connect()
@@ -52,3 +54,29 @@ def setDepositedByCurrency(currency:bytes):
     s=storeWalletTable.update().where(storeWalletTable.c.digital_currency==currency).values(deposited=1)
     conn = engine.connect()
     conn.execute(s)
+
+def getCurrencyNotYetDepositForFrontEnd():
+    s=storeWalletTable.select().where(storeWalletTable.c.deposited==0)
+    conn = engine.connect()
+    results = conn.execute(s)
+    returnResult=list()
+    for result in results:
+        currency=result[2]
+        hiddenUserInfo=json.loads(result[1])
+        hiddenUserInfo=hiddenUserInfo[0][:30]+"..."
+        resultList=list(result)
+        returnResult.append([currency,hiddenUserInfo])
+    return returnResult
+
+def getCurrencyDepositedForFrontEnd():
+    s=storeWalletTable.select().where(storeWalletTable.c.deposited==1)
+    conn = engine.connect()
+    results = conn.execute(s)
+    returnResult=list()
+    for result in results:
+        currency=result[2]
+        hiddenUserInfo=json.loads(result[1])
+        hiddenUserInfo=hiddenUserInfo[0][:30]+"..."
+        resultList=list(result)
+        returnResult.append([currency,hiddenUserInfo])
+    return returnResult
