@@ -39,15 +39,14 @@ def StartTransaction():
 def getCurrency():
     if session.get("RandomBinaryString")==None:return "Please get your session and Random Binary String First"
     CurrencyAndBankSignatureList=json.loads(request.values['CurrencyAndBankSignature'])
-    HiddenUserInfoList=json.loads(request.values['HiddenUserInfoList'])
+    HiddenUserInfoList=request.values['HiddenUserInfoList']
     
     for i in range(len(CurrencyAndBankSignatureList)):
         CurrencyAndBankSignature=CurrencyAndBankSignatureList[i]
         cipherCurrency=CurrencyAndBankSignature["CipherCurrency"]
         currency=CryptUtil.Base64RSADecrypt(cipherCurrency,privateKeyBase64)
-        HiddenUserInfo=HiddenUserInfoList[i]
-        print(currency,HiddenUserInfo)
-        SQLiteUtil.insertTrade(HiddenUserInfo,currency)
+        print(currency,HiddenUserInfoList)
+        SQLiteUtil.insertTrade(HiddenUserInfoList,currency)
     return '{"Status":"Sucsess"}'
 
 
