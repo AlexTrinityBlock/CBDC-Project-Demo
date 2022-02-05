@@ -13,6 +13,7 @@ BankGetCurrencyURL:str='http://127.0.0.1:8080/get-currency'
 #Store URL
 StorePublicKey="http://127.0.0.1:7070/store/public-key/"
 StoreStartTransactionURL="http://127.0.0.1:7070/start-transaction/get-binary-string"
+SendCurrencyToStoreURL="http://127.0.0.1:7070/get-currency"
 
 
 #Currency List
@@ -61,12 +62,13 @@ def GetCurrency():
         currency=CryptUtil.Base64RSADecrypt(currencyAndSigNature["Currency"],CryptUtil.bytesToBase64String(UserPrivateKey))
         currencyList.append({"Currency":currency,"BankSignature":currencyAndSigNature["BankSignature"]})
 
-    print("===============Get Currency===============\n",json.dumps(currencyList, indent=4, sort_keys=True),"\n===================================\n")
+    # print("===============Get Currency===============\n",json.dumps(currencyList, indent=4, sort_keys=True),"\n===================================\n")
+    return currencyList
 
 #Send to Store
-def SendToStroe():
+def SendToStroe(currencyList:list=None):
     #init
-    serverPublicKey=bytes()
+    storePublicKey=bytes()
     binaryString = str()
     randomStrings=[]
 
@@ -78,7 +80,7 @@ def SendToStroe():
     requestSessionObject=requests.Session()
     responseObeject = requestSessionObject.get(StorePublicKey)
     responseJSON=json.loads(responseObeject.text)
-    serverPublicKey= CryptUtil.Base64StringToBytes(responseJSON["PublicKey"])
+    storePublicKey= CryptUtil.Base64StringToBytes(responseJSON["PublicKey"])
 
     #Get binary String
     responseObeject=requestSessionObject.get(StoreStartTransactionURL)
@@ -94,10 +96,21 @@ def SendToStroe():
             resultList.append(StringXOR(randomStrings[counter],user_uuid))
         counter+=1
 
-    #Return Hidden user info to store
-    result={
-        ""
-    }
+    #Encrypt currency
+    cipherCurrencyList=[]
+    
+    for currency in currencyList:
+        currencyString=currency["Currency"]
+        cryptCurrency=CryptUtil.RSAencrypto(currencyString.encode("utf-8"),storePublicKey)
+        cryptCurrencyBase64=CryptUtil.bytesToBase64String(cryptCurrency)
+        element={"CipherCurrency":cryptCurrencyBase64,"BankSignature":currency["BankSignature"]}
+        cipherCurrencyList.append(element)
+
+    result=json.dumps(cipherCurrencyList)
+    resultHiddenUserInfo=json.dumps( resultList)
+    responseObeject =requestSessionObject.post(SendCurrencyToStoreURL,data={"CurrencyAndBankSignature":result,"HiddenUserInfoList":resultHiddenUserInfo})
+    print(responseObeject.text)
+    
 
 
 
@@ -109,7 +122,7 @@ def SendToStroe():
 
 
 if __name__ == '__main__':
-    # GetCurrency()
-    SendToStroe()
+    currency=GetCurrency()
+    SendToStroe(currency)
     # print(randomString(36))
     # print(StringXOR(randomString(36),randomString(36)))

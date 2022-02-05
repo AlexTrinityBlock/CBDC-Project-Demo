@@ -19,49 +19,10 @@ app.config['SECRET_KEY'] = os.urandom(24)
 publicKeyBase64=CryptUtil.bytesToBase64String(CryptUtil.readBytes("PublicKey.pem"))
 privateKeyBase64=CryptUtil.bytesToBase64String(CryptUtil.readBytes("PrivateKey.pem"))
 
-# @app.route('/')
-# def API1():
-#     result:dict
-#     try:
-#         result={
-#             "Key":"value"
-#         }
-#     except Exception as e:
-#         result="[server]"+e
-#     return json.dumps(result)
-
-# @app.route('/check-session')
-# def API2():
-#     result:dict
-#     try:
-#         if  session["test"]==1 :
-#             result={
-#                 "status":"OK"
-#             }
-#         else :
-#             result={
-#                 "status":"Not OK"
-#             }
-#     except Exception as e:
-#         result={
-#             "status":"Not OK",
-#         }
-#     return json.dumps(result)
-
-# @app.route('/get-session')
-# def API3():
-#     result:dict
-#     try:
-#         session["test"]=1
-#     except Exception as e:
-#         result="[server]"+str(e)
-#         return result
-#     return "You get session"
-
 @app.route('/store/public-key/',methods=['GET'])
 def getStorePublicKey():
     result={
-        "PublicKey":CryptUtil.bytesToBase64String(CryptUtil.readBytes("PublicKey.pem"))
+        "PublicKey":publicKeyBase64
     }
     return result
 
@@ -74,10 +35,20 @@ def StartTransaction():
     session["RandomBinaryString"]=VerifyUtil.randomBinaryString(10)
     return session["RandomBinaryString"]
 
-@app.route('/get-currency',methods=['GET'])
+@app.route('/get-currency',methods=['POST'])
 def getCurrency():
     if session.get("RandomBinaryString")==None:return "Please get your session and Random Binary String First"
-    return "OK"
+    CurrencyAndBankSignatureList=json.loads(request.values['CurrencyAndBankSignature'])
+    HiddenUserInfoList=json.loads(request.values['HiddenUserInfoList'])
+    
+    for i in range(len(CurrencyAndBankSignatureList)):
+        CurrencyAndBankSignature=CurrencyAndBankSignatureList[i]
+        cipherCurrency=CurrencyAndBankSignature["CipherCurrency"]
+        currency=CryptUtil.Base64RSADecrypt(cipherCurrency,privateKeyBase64)
+        HiddenUserInfo=HiddenUserInfoList[i]
+        print(currency,HiddenUserInfo)
+        SQLiteUtil.insertTrade(HiddenUserInfo,currency)
+    return '{"Status":"Sucsess"}'
 
 
 if __name__ == '__main__':
