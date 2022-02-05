@@ -1,10 +1,13 @@
 from ast import Str
 from codecs import utf_16_be_decode
+import json
+from urllib import response
 from Crypto.Cipher import AES, PKCS1_OAEP
 from Crypto.Util import Counter
 from Crypto.PublicKey import RSA
 import hashlib
 import base64
+import requests
 
 def StringSHA256(KeyStr: str):
     byteString = bytes(KeyStr, "utf-8")
@@ -75,3 +78,9 @@ def RSASignature(StringPlainText:str,privateKey:bytes):
     stringSHA256=bytesToBase64String(StringSHA256(StringPlainText))
     signatureBase64String:str=Base64RSAEncrypt(stringSHA256,bytesToBase64String(privateKey))
     return signatureBase64String
+
+def getServerBase64Publickey(PublickeyURL:str):
+    requestSessionObject=requests.Session()
+    responseText=requestSessionObject.get(PublickeyURL).text
+    responseJson=json.loads(responseText)
+    return responseJson["PublicKey"]

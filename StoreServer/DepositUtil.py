@@ -1,0 +1,24 @@
+import CryptUtil
+import SQLiteUtil
+import requests
+import json
+
+BankDepositURL='http://127.0.0.1:8080/deposit'
+BankPublicKeyURL:str='http://127.0.0.1:8080/public-key/user/withdraw'
+
+def Deposit():
+    CurrencyWithoutDepositedList=SQLiteUtil.findCurrencyWithoutDeposited()
+    requestSessionObject=requests.Session()
+    BankBase64PublicKey=CryptUtil.getServerBase64Publickey(BankPublicKeyURL)
+    result=[]
+    for element in CurrencyWithoutDepositedList:
+        currency=element["digital_currency"].encode("utf-8")
+        cipherCurrency=CryptUtil.Base64RSAEncrypt(CryptUtil.bytesToBase64String(currency),BankBase64PublicKey)
+        resultElement={"CipherCurrency":cipherCurrency,"hidden_user_info":element["hidden_user_info"]}
+        result.append(resultElement)
+
+    for i in range(len(result)):
+        responseObeject = requestSessionObject.post(BankDepositURL,data={"Deposit":json.dumps(result[i])})
+        print(responseObeject.text,"\n")
+
+

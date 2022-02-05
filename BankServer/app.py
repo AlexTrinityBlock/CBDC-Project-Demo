@@ -67,10 +67,14 @@ def getCurrency():
         result={
             "Status":"Fail"            
         }
-
-    # except Exception as e:
-    #     result="[server] Error"+str(e)
     return json.dumps(result)
+
+@app.route('/deposit',methods=['POST'])
+def deposit():
+    bankPrivateKey=CryptUtil.bytesToBase64String(CryptUtil.readBytes("PrivateKey.pem"))
+    DepositJson:dict=json.loads(request.values['Deposit'])
+    Currency=CryptUtil.Base64RSADecrypt( DepositJson["CipherCurrency"],bankPrivateKey)
+    return Currency
 
 if __name__ == '__main__':
     app.run()
