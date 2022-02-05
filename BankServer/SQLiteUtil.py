@@ -71,7 +71,8 @@ def getPasswordHashByUserName(userNme:str=""):
     results = conn.execute(s)
     returnResult=None
     for result in results:
-        returnResult=result[3]
+        print(result)
+        returnResult=result[4]
     return returnResult
 
 def getBalanceByUserName(userName:str=""):
@@ -147,14 +148,21 @@ def getCurrencyInfoForFrontEnd():
     s=currencyTable.select()
     conn = engine.connect()
     results = conn.execute(s)
+
     returnResult=list()
     for result in results:
         resultList=list(result)
         isDeposited=""
         if resultList[2]==1:isDeposited="Yes"
         else:isDeposited="No"
-        HiddenUserInfoList=json.loads(resultList[3])
-        returnResult.append([resultList[1],HiddenUserInfoList[0][:30]+"...",isDeposited])
+        
+        try:
+            HiddenUserInfoList=json.loads(resultList[3])
+            returnResult.append([resultList[1],HiddenUserInfoList[0][:30]+"...",isDeposited])
+        except:
+            returnResult.append([resultList[1],"Not Deposited Yet",isDeposited])
+            pass
+
     return returnResult
 
 def getDoubleSpendingUserInfoForFrontEnd():

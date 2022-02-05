@@ -30,7 +30,7 @@ def findUserInfoFromHiddenInfoByCurrency(currency:str,hiddenInfo:str):
     hiddenInfoObject1=json.loads(hiddenInfoString1)
     hiddenInfoObject2=json.loads(hiddenInfoString2)
     
-    DoubleSpendingUserResult:str
+    DoubleSpendingUserResult:str=""
 
     for i in range(len(hiddenInfoObject1)):
         #Possible1

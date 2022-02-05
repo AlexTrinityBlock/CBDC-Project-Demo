@@ -23,5 +23,7 @@ def Deposit():
         responseObeject = requestSessionObject.post(BankDepositURL,data={"Deposit":json.dumps(result[i])})
         print(responseObeject.text,"\n")
         #If it's valid coin save record to Database
+        if responseObeject.text=="Success":
+            SQLiteUtil.setDepositedByCurrency(CurrencyWithoutDepositedList[i]["digital_currency"].encode("utf-8"))
 
 

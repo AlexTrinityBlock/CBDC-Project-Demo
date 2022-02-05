@@ -42,5 +42,13 @@ def findCurrencyWithoutDeposited():
     session=Session()
     returnResult=list()
     for instance in session.query(storeWalletTable).filter_by(deposited=0):
-        returnResult.append({"hidden_user_info":instance.hidden_user_info,"digital_currency":instance.digital_currency})
+        if instance.deposited !=1:
+            returnResult.append({"hidden_user_info":instance.hidden_user_info,"digital_currency":instance.digital_currency})
     return returnResult
+
+def setDepositedByCurrency(currency:bytes):
+    currency=currency.decode("utf-8")
+    print("Set",currency,"Deposited")
+    s=storeWalletTable.update().where(storeWalletTable.c.digital_currency==currency).values(deposited=1)
+    conn = engine.connect()
+    conn.execute(s)
