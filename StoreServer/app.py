@@ -8,8 +8,9 @@ import uuid
 import json
 import CryptUtil
 import VerifyUtil
+import DepositUtil
 import os
-from flask import render_template,Flask,session,request
+from flask import render_template,Flask,session,request,abort, redirect, url_for
 from datetime import timedelta
 
 app = flask.Flask(__name__)
@@ -24,6 +25,11 @@ def homePage():
     NotDepositedYetCurrencys=SQLiteUtil.getCurrencyNotYetDepositForFrontEnd()
     CurrencysDeposited=SQLiteUtil.getCurrencyDepositedForFrontEnd()
     return render_template('index.html',NotDepositedYetCurrencys=NotDepositedYetCurrencys,CurrencysDeposited=CurrencysDeposited) 
+
+@app.route('/deposit',methods=['GET'])
+def deposit():
+    DepositUtil.Deposit()
+    return redirect('/')
 
 @app.route('/store/public-key/',methods=['GET'])
 def getStorePublicKey():

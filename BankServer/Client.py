@@ -199,8 +199,8 @@ def doubleSpending():
 
 
 if __name__ == '__main__':
-    # currency=GetCurrency()
-    # SendToStroe(currency)
-    doubleSpending()
+    currency=GetCurrency()
+    SendToStroe(currency)
+    # doubleSpending()
     # print(randomString(36))
     # print(StringXOR(randomString(36),randomString(36)))
