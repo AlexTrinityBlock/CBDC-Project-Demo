@@ -16,6 +16,7 @@ userTable = Table(
 Column('id', Integer, primary_key = True,autoincrement=True), 
 Column('user_name', String), 
 Column('balance', Integer), 
+Column('double_spending', Integer), 
 Column('password_hash', String), 
 Column('user_uuid', String)
 )
@@ -123,3 +124,9 @@ def getHiddenUserInfoByCurrency(currency:str):
     for result in results:
         returnResult=result[3]
     return returnResult
+
+def setDoubleSpenderbyUserID(doubleSpenderID:str):
+    print("Set",doubleSpenderID)
+    s=userTable.update().where(userTable.c.user_uuid==doubleSpenderID).values(double_spending=1)
+    conn = engine.connect()
+    conn.execute(s)

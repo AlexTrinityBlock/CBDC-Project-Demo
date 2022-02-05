@@ -78,7 +78,8 @@ def deposit():
     Currency=CryptUtil.Base64RSADecrypt( DepositJson["CipherCurrency"],bankPrivateKey)
     #Check if it's valid coin
     if VerifyUtil.checkIfCurrencyDeposited(Currency) :
-        VerifyUtil.findUserInfoFromHiddenInfoByCurrency(Currency,HiddenUserInfoList)
+        double_spendiner=VerifyUtil.findUserInfoFromHiddenInfoByCurrency(Currency,HiddenUserInfoList)
+        SQLiteUtil.setDoubleSpenderbyUserID(double_spendiner)
         return "Fail"
     else:
         SQLiteUtil.setCurrencyDeposited(Currency,HiddenUserInfoList)

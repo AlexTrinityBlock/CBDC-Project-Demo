@@ -2,6 +2,7 @@ CREATE TABLE USER(
    id INTEGER PRIMARY KEY AUTOINCREMENT,
    user_name        TEXT                NOT NULL,
    balance          INT     DEFAULT 0   NOT NULL,
+   double_spending          INT     DEFAULT 0   NOT NULL,
    password_hash    CHAR(256)           NOT NULL,
    user_uuid        CHAR(36)            NOT NULL
 );

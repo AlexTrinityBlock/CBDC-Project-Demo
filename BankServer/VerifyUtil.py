@@ -30,7 +30,7 @@ def findUserInfoFromHiddenInfoByCurrency(currency:str,hiddenInfo:str):
     hiddenInfoObject1=json.loads(hiddenInfoString1)
     hiddenInfoObject2=json.loads(hiddenInfoString2)
     
-    DoubleSpendingUserList=set()
+    DoubleSpendingUserResult:str
 
     for i in range(len(hiddenInfoObject1)):
         #Possible1
@@ -40,7 +40,7 @@ def findUserInfoFromHiddenInfoByCurrency(currency:str,hiddenInfo:str):
         
         try:
             DoubleSpendingUser=XORedInfo.decode("utf-8")
-            if checkIfIsUUID(DoubleSpendingUser):DoubleSpendingUser.add(DoubleSpendingUser)
+            if checkIfIsUUID(DoubleSpendingUser):DoubleSpendingUserResult=DoubleSpendingUser
         except:
             pass
 
@@ -51,9 +51,9 @@ def findUserInfoFromHiddenInfoByCurrency(currency:str,hiddenInfo:str):
 
         try:
             DoubleSpendingUser=XORedInfo.decode("utf-8")
-            if checkIfIsUUID(DoubleSpendingUser):DoubleSpendingUser.add(DoubleSpendingUser)
+            if checkIfIsUUID(DoubleSpendingUser):DoubleSpendingUserResult=DoubleSpendingUser
         except:
             pass
     
-    return json.dumps(DoubleSpendingUser)
+    return DoubleSpendingUserResult
 
