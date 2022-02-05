@@ -13,10 +13,19 @@ import json
 import os
 from flask import render_template,Flask,session,request
 from datetime import timedelta
+from flask import render_template
 
 app = flask.Flask(__name__)
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=1)
 app.config['SECRET_KEY'] = os.urandom(24)
+
+@app.route('/',methods=['GET'])
+def homePage():
+    #User Info
+    UsersInfo:list=SQLiteUtil.getAllUserInfoForFrontEnd()
+    CurrencysInfo:list=SQLiteUtil.getCurrencyInfoForFrontEnd()
+    DoubleSpendingUsersInfo:list=SQLiteUtil.getDoubleSpendingUserInfoForFrontEnd()
+    return render_template('index.html',UsersInfo=UsersInfo,CurrencysInfo=CurrencysInfo,DoubleSpendingUsersInfo=DoubleSpendingUsersInfo) 
 
 @app.route('/public-key/user/withdraw',methods=['GET'])
 def transportPubblicKey():

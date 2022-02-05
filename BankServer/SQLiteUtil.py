@@ -1,10 +1,12 @@
 from ctypes.wintypes import INT
 import sqlite3
 import os
+from itsdangerous import json
 import sqlalchemy
 import CryptUtil
 from sqlalchemy.orm import Session
 from sqlalchemy import Table, Column, Integer, String, MetaData
+import json
 
 engine = sqlalchemy.create_engine('sqlite:///./database/bank.db')
 connection = engine.connect()
@@ -130,3 +132,37 @@ def setDoubleSpenderbyUserID(doubleSpenderID:str):
     s=userTable.update().where(userTable.c.user_uuid==doubleSpenderID).values(double_spending=1)
     conn = engine.connect()
     conn.execute(s)
+
+def getAllUserInfoForFrontEnd():
+    s=userTable.select()
+    conn = engine.connect()
+    results = conn.execute(s)
+    returnResult=list()
+    for result in results:
+        resultList=list(result)
+        returnResult.append([resultList[5],resultList[1],resultList[2]])
+    return returnResult
+
+def getCurrencyInfoForFrontEnd():
+    s=currencyTable.select()
+    conn = engine.connect()
+    results = conn.execute(s)
+    returnResult=list()
+    for result in results:
+        resultList=list(result)
+        isDeposited=""
+        if resultList[2]==1:isDeposited="Yes"
+        else:isDeposited="No"
+        HiddenUserInfoList=json.loads(resultList[3])
+        returnResult.append([resultList[1],HiddenUserInfoList[0][:30]+"...",isDeposited])
+    return returnResult
+
+def getDoubleSpendingUserInfoForFrontEnd():
+    s=userTable.select().where(userTable.c.double_spending==1)
+    conn = engine.connect()
+    results = conn.execute(s)
+    returnResult=list()
+    for result in results:
+        resultList=list(result)
+        returnResult.append([resultList[5],resultList[1]])
+    return returnResult
