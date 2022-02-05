@@ -25,7 +25,7 @@ currencyTable=Table(
 'CURRENCY', meta, 
 Column('id', Integer, primary_key = True,autoincrement=True), 
 Column('currency', String), 
-Column('withdrawn', Integer), 
+Column('deposited', Integer), 
 Column('hidden_user_info', String), 
 Column('binary_string', String)
 )
@@ -99,4 +99,27 @@ def getUserIDByUserName(userNme:str=""):
     returnResult=None
     for result in results:
         returnResult=result[0]
+    return returnResult
+
+def getDepositedStatusByCurrency(currency:str):
+    s=currencyTable.select().where(currencyTable.c.currency==currency)
+    conn = engine.connect()
+    results = conn.execute(s)
+    returnResult=None
+    for result in results:
+        returnResult=result[2]
+    return returnResult
+
+def setCurrencyDeposited(currency:str,HiddenUserInfoListString:str):
+    s=currencyTable.update().where(currencyTable.c.currency==currency).values(deposited=1,hidden_user_info=HiddenUserInfoListString)
+    conn = engine.connect()
+    conn.execute(s)
+
+def getHiddenUserInfoByCurrency(currency:str):
+    s=currencyTable.select().where(currencyTable.c.currency==currency)
+    conn = engine.connect()
+    results = conn.execute(s)
+    returnResult=None
+    for result in results:
+        returnResult=result[3]
     return returnResult

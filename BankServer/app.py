@@ -8,6 +8,7 @@ import CryptUtil
 import AccountUtil
 import CurrencyUtil
 import SQLiteUtil
+import VerifyUtil
 import json
 import os
 from flask import render_template,Flask,session,request
@@ -73,8 +74,15 @@ def getCurrency():
 def deposit():
     bankPrivateKey=CryptUtil.bytesToBase64String(CryptUtil.readBytes("PrivateKey.pem"))
     DepositJson:dict=json.loads(request.values['Deposit'])
+    HiddenUserInfoList=DepositJson["hidden_user_info"]
     Currency=CryptUtil.Base64RSADecrypt( DepositJson["CipherCurrency"],bankPrivateKey)
-    return Currency
+    #Check if it's valid coin
+    if VerifyUtil.checkIfCurrencyDeposited(Currency) :
+        VerifyUtil.findUserInfoFromHiddenInfoByCurrency(Currency,HiddenUserInfoList)
+        return "Fail"
+    else:
+        SQLiteUtil.setCurrencyDeposited(Currency,HiddenUserInfoList)
+        return "Success"
 
 if __name__ == '__main__':
     app.run()

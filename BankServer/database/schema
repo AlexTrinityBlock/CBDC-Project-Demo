@@ -9,7 +9,7 @@ CREATE TABLE USER(
 CREATE TABLE CURRENCY(
    id INTEGER PRIMARY KEY AUTOINCREMENT,
    currency          TEXT                NOT NULL,
-   withdrawn         INT     DEFAULT 0           ,
+   deposited         INT     DEFAULT 0           ,
    hidden_user_info  TEXT                        ,
    binary_string     TEXT                        
 );

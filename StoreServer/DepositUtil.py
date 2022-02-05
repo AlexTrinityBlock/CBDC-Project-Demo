@@ -17,8 +17,11 @@ def Deposit():
         resultElement={"CipherCurrency":cipherCurrency,"hidden_user_info":element["hidden_user_info"]}
         result.append(resultElement)
 
+    print("Number of Deposit data",len(result))
+
     for i in range(len(result)):
         responseObeject = requestSessionObject.post(BankDepositURL,data={"Deposit":json.dumps(result[i])})
         print(responseObeject.text,"\n")
+        #If it's valid coin save record to Database
 
 
