@@ -86,7 +86,7 @@ def deposit():
     HiddenUserInfoList=DepositJson["hidden_user_info"]
     Currency=CryptUtil.Base64RSADecrypt( DepositJson["CipherCurrency"],bankPrivateKey)
     #Check if it's valid coin
-    if VerifyUtil.checkIfCurrencyDeposited(Currency) and  VerifyUtil.checkCurrencyIsReal(Currency):
+    if VerifyUtil.checkIfCurrencyDeposited(Currency) or  VerifyUtil.checkCurrencyIsReal(Currency):
         print("Coin: ",Currency,"is Deposited")
         double_spendiner=VerifyUtil.findUserInfoFromHiddenInfoByCurrency(Currency,HiddenUserInfoList)
         SQLiteUtil.setDoubleSpenderbyUserID(double_spendiner)

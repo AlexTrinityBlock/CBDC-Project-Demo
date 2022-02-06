@@ -77,7 +77,7 @@ def getCurrencyNotYetDepositForFrontEnd():
     return returnResult
 
 def getCurrencyDepositedForFrontEnd():
-    s=storeWalletTable.select().where(storeWalletTable.c.deposited==1)
+    s=storeWalletTable.select().where(storeWalletTable.c.deposited==1 , storeWalletTable.c.deposit_fail!=1)
     conn = engine.connect()
     results = conn.execute(s)
     returnResult=list()

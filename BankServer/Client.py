@@ -15,10 +15,6 @@ StorePublicKey="http://127.0.0.1:7070/store/public-key/"
 StoreStartTransactionURL="http://127.0.0.1:7070/start-transaction/get-binary-string"
 SendCurrencyToStoreURL="http://127.0.0.1:7070/get-currency"
 
-
-#Currency List
-currencyList=list()
-
 #UserID
 user_name="Alice"
 user_uuid="30a1bf87-b0e1-4921-a0b8-8c602af1f391"
@@ -47,7 +43,7 @@ def GetCurrency():
     user_input={
         "user_name":"Alice",
         "user_password":"abc",
-        "withdrawal_number":3,
+        "withdrawal_number":1
     }
     user_input_bytes=bytes(json.dumps(user_input),"utf-8")
     CipherText=CryptUtil.RSAencrypto(user_input_bytes,serverPublicKey)
@@ -57,6 +53,7 @@ def GetCurrency():
     #User decrypt bank response
     BanReturnCurrencyJson = json.loads(responseText)
     cipherCurrencyList=BanReturnCurrencyJson["cipher_currency"]
+    currencyList=list()
 
     for currencyAndSigNature in cipherCurrencyList:
         currency=CryptUtil.Base64RSADecrypt(currencyAndSigNature["Currency"],CryptUtil.bytesToBase64String(UserPrivateKey))
@@ -199,8 +196,9 @@ def doubleSpending():
 
 
 if __name__ == '__main__':
-    currency=GetCurrency()
-    SendToStroe(currency)
+    for i in range(3):
+        currency=GetCurrency()
+        SendToStroe(currency)
     # doubleSpending()
     # print(randomString(36))
     # print(StringXOR(randomString(36),randomString(36)))

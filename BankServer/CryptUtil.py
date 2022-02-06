@@ -1,6 +1,9 @@
 from ast import Str
 from codecs import utf_16_be_decode
 from Crypto.Cipher import AES, PKCS1_OAEP
+from Crypto.Cipher import PKCS1_v1_5
+from Crypto.Hash import SHA256, SHA1
+from Crypto.Signature import pss
 from Crypto.Util import Counter
 from Crypto.PublicKey import RSA
 import hashlib
@@ -42,12 +45,16 @@ def RSAKeyPairFilesGenerator():
     writeBytes(reaKeyPair["PrivateKey"],"PrivateKey.pem")
 
 def RSAencrypto(data: bytes, publicKey: bytes):
-    cipherRSA = PKCS1_OAEP.new(RSA.importKey(publicKey))
+    # cipherRSA = PKCS1_OAEP.new(RSA.importKey(publicKey), hashAlgo=SHA256, mgfunc=lambda x,y: pss.MGF1(x,y, SHA1))
+    # cipherRSA =PKCS1_v1_5.new(RSA.importKey(publicKey))
+    cipherRSA =PKCS1_OAEP.new(RSA.importKey(publicKey),hashAlgo=SHA256)
     result = cipherRSA.encrypt(data)
     return result
 
 def RSAdecrypto(data: bytes, privateKey: bytes):
-    cipherRSA = PKCS1_OAEP.new(RSA.importKey(privateKey))
+    # cipherRSA = PKCS1_OAEP.new(RSA.importKey(privateKey), hashAlgo=SHA256, mgfunc=lambda x,y: pss.MGF1(x,y, SHA1))
+    # cipherRSA =PKCS1_v1_5.new(RSA.importKey(privateKey))
+    cipherRSA =PKCS1_OAEP.new(RSA.importKey(privateKey),hashAlgo=SHA256)
     result = cipherRSA.decrypt(data)
     return result
 
