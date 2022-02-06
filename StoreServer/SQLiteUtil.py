@@ -19,7 +19,8 @@ storeWalletTable = Table(
 Column('id', Integer, primary_key = True,autoincrement=True), 
 Column('hidden_user_info', String), 
 Column('digital_currency', String),
-Column('deposited', Integer)
+Column('deposited', Integer),
+Column('deposit_fail', Integer)
 )
 
 def createNewDatabase():
@@ -55,8 +56,15 @@ def setDepositedByCurrency(currency:bytes):
     conn = engine.connect()
     conn.execute(s)
 
+def setDepositFailByCurrency(currency:bytes):
+    currency=currency.decode("utf-8")
+    print("Set",currency,"Deposited")
+    s=storeWalletTable.update().where(storeWalletTable.c.digital_currency==currency).values(deposit_fail=1)
+    conn = engine.connect()
+    conn.execute(s)
+
 def getCurrencyNotYetDepositForFrontEnd():
-    s=storeWalletTable.select().where(storeWalletTable.c.deposited==0)
+    s=storeWalletTable.select().where(storeWalletTable.c.deposited==0,storeWalletTable.c.deposit_fail==0)
     conn = engine.connect()
     results = conn.execute(s)
     returnResult=list()
@@ -70,6 +78,19 @@ def getCurrencyNotYetDepositForFrontEnd():
 
 def getCurrencyDepositedForFrontEnd():
     s=storeWalletTable.select().where(storeWalletTable.c.deposited==1)
+    conn = engine.connect()
+    results = conn.execute(s)
+    returnResult=list()
+    for result in results:
+        currency=result[2]
+        hiddenUserInfo=json.loads(result[1])
+        hiddenUserInfo=hiddenUserInfo[0][:30]+"..."
+        resultList=list(result)
+        returnResult.append([currency,hiddenUserInfo])
+    return returnResult
+
+def getCurrencyDepositFailForFrontEnd():
+    s=storeWalletTable.select().where(storeWalletTable.c.deposit_fail==1)
     conn = engine.connect()
     results = conn.execute(s)
     returnResult=list()

@@ -24,7 +24,8 @@ privateKeyBase64=CryptUtil.bytesToBase64String(CryptUtil.readBytes("PrivateKey.p
 def homePage():
     NotDepositedYetCurrencys=SQLiteUtil.getCurrencyNotYetDepositForFrontEnd()
     CurrencysDeposited=SQLiteUtil.getCurrencyDepositedForFrontEnd()
-    return render_template('index.html',NotDepositedYetCurrencys=NotDepositedYetCurrencys,CurrencysDeposited=CurrencysDeposited) 
+    CurrencyDepositFail=SQLiteUtil.getCurrencyDepositFailForFrontEnd()
+    return render_template('index.html',NotDepositedYetCurrencys=NotDepositedYetCurrencys,CurrencysDeposited=CurrencysDeposited,CurrencyDepositFail=CurrencyDepositFail) 
 
 @app.route('/deposit',methods=['GET'])
 def deposit():

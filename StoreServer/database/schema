@@ -2,6 +2,7 @@ CREATE TABLE STOREWALLET(
    id INTEGER PRIMARY KEY AUTOINCREMENT,
    hidden_user_info     TEXT                NOT NULL,
    digital_currency     TEXT     DEFAULT 0   NOT NULL,
-   deposited         INT     DEFAULT 0           
+   deposited         INT     DEFAULT 0,           
+   deposit_fail         INT     DEFAULT 0
 );
 

@@ -174,3 +174,12 @@ def getDoubleSpendingUserInfoForFrontEnd():
         resultList=list(result)
         returnResult.append([resultList[5],resultList[1]])
     return returnResult
+
+def getNumberOfCurrency(currency:str):
+    s=currencyTable.select().where(currencyTable.c.currency==currency)
+    conn = engine.connect()
+    results = conn.execute(s)
+    counter=0
+    for result in results:
+        counter+=1
+    return counter

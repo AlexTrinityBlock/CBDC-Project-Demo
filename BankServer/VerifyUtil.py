@@ -57,3 +57,9 @@ def findUserInfoFromHiddenInfoByCurrency(currency:str,hiddenInfo:str):
     
     return DoubleSpendingUserResult
 
+def checkCurrencyIsReal(currency:str):
+    if SQLiteUtil.getNumberOfCurrency(currency)==1:
+        return True
+    else:
+        return False
+

@@ -25,5 +25,7 @@ def Deposit():
         #If it's valid coin save record to Database
         if responseObeject.text=="Success":
             SQLiteUtil.setDepositedByCurrency(CurrencyWithoutDepositedList[i]["digital_currency"].encode("utf-8"))
+        else:
+            SQLiteUtil.setDepositFailByCurrency(CurrencyWithoutDepositedList[i]["digital_currency"].encode("utf-8"))
 
 
