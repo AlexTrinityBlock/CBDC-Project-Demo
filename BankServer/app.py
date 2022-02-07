@@ -2,7 +2,9 @@
 # flask run --host=0.0.0.0
 #flask run --port 8080  --host=0.0.0.0
 # pip install -r requirements.txt 
+from ast import Import
 from locale import currency
+from multiprocessing.connection import Client
 import flask
 import CryptUtil
 import AccountUtil
@@ -11,7 +13,7 @@ import SQLiteUtil
 import VerifyUtil
 import json
 import os
-from flask import render_template,Flask,session,request
+from flask import render_template,Flask,session,request,redirect
 from datetime import timedelta
 from flask import render_template
 
@@ -26,6 +28,23 @@ def homePage():
     CurrencysInfo:list=SQLiteUtil.getCurrencyInfoForFrontEnd()
     DoubleSpendingUsersInfo:list=SQLiteUtil.getDoubleSpendingUserInfoForFrontEnd()
     return render_template('index.html',UsersInfo=UsersInfo,CurrencysInfo=CurrencysInfo,DoubleSpendingUsersInfo=DoubleSpendingUsersInfo) 
+
+@app.route('/user',methods=['GET'])
+def userPage():
+    return render_template('user.html')
+
+@app.route('/useCurrency',methods=['GET'])
+def userAPI():
+    import Client
+    currency=Client.GetCurrency()
+    Client.SendToStroe(currency)
+    return redirect('/user')
+
+@app.route('/double-spenddig',methods=['GET'])
+def doubleSpenddigAPI():
+    import Client
+    Client.doubleSpending()
+    return redirect('/user')
 
 @app.route('/public-key/user/withdraw',methods=['GET'])
 def transportPubblicKey():
