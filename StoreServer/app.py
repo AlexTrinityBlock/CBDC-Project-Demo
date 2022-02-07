@@ -50,7 +50,7 @@ def StartTransaction():
 
 @app.route('/get-currency',methods=['POST'])
 def getCurrency():
-    if session.get("RandomBinaryString")==None:return "Please get your session and Random Binary String First"
+    # if session.get("RandomBinaryString")==None:return "Please get your session and Random Binary String First"
     CurrencyAndBankSignatureList=json.loads(request.values['CurrencyAndBankSignature'])
     HiddenUserInfoList=request.values['HiddenUserInfoList']
     
