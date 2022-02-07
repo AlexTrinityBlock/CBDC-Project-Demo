@@ -1,6 +1,6 @@
 # Scripts\activate.bat
 # flask run --host=0.0.0.0
-#flask run --port 8080
+#flask run --port 8080  --host=0.0.0.0
 # pip install -r requirements.txt 
 from locale import currency
 import flask

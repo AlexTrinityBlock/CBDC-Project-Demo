@@ -1,5 +1,5 @@
 # Scripts\activate.bat
-# flask run --port 7070
+# flask run --port 7070  --host=0.0.0.0
 # pip install -r requirements.txt 
 from unittest import result
 import flask
@@ -50,7 +50,7 @@ def StartTransaction():
 
 @app.route('/get-currency',methods=['POST'])
 def getCurrency():
-    if session.get("RandomBinaryString")==None:return "Please get your session and Random Binary String First"
+    if session.get("RandomBinaryString")==None:return "Please get your session and Random Binary String First,cookie is"+request.cookies.get('session')
     CurrencyAndBankSignatureList=json.loads(request.values['CurrencyAndBankSignature'])
     HiddenUserInfoList=request.values['HiddenUserInfoList']
     
