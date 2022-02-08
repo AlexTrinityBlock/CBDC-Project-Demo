@@ -121,8 +121,8 @@ def doubleSpending():
 
     doubleSpendingCurrency=[
         {'Currency': '5d37e4ff-9549-4569-9fb5-1d35e5801c3a', 'BankSignature': 'dAfpq93f6cn8qCBtvgYXO1IGpxd3GDAcLrR5sfmVCx+yVEJ9Ss427z4N0PLDPAfGFCkS/uHykHtX0nCDjYIWT/bponKFHFa59oGMjiSFb1dHaV0WOF0SN+ni8A4XtwZwO2g1xSiMBcl1ZVvIys8Y8R2VMCDlLdUSF5oQoMiTSz+JXpilMjnSvB+ezPdeE/O+O2K4fJBcA0tQcVqZH0EstG7SxpezzfSUgOvljmFJGKCUR92bZ0VmtUvF4EY273n5uJ4lUJVNSGWZvd33hzjlc9jElB7hKg9PnR3uI1NT5J0N/HA/2wHdBFKpkNFui0dOC+33RjklAtJeuzybX6q/qg=='}, 
-        {'Currency': '3fa53627-e658-457d-bcc4-1bca7f655ebc', 'BankSignature': 'BuIsDxUOMSoPmDQ0turs4/96cnwh0pf2GTDiJ+kFrA6ESFFiuINT95Q2+4igvHjIXUspA02dKfMIRn4GC1FYWRuIq8EiRiyYPYdYh2s4yGP3xiSSidcaG+jC80fADkV3OboTLfXIpqusSMk1k9W+xgc1q13EQ9noDBW0COFyYcxmLc71GCX8/UHT1x+1YDodgh7WMzJDlWT+BcC9Im11eeb7rhcOdteBJ3IbGUXlPuWke3Btrad78DRm541+VShdmIMrPxd0J5hwpH45TyTaKNOilP15B1BjoEO2Y+L0JO+CVo7V/PrmANwO+5OiuHAEGMhBmT86Dz6c1zmJSD4fQQ=='}, 
-        {'Currency': '29f08f62-e702-4bad-adda-162851ffaaae', 'BankSignature': 'foxB3KMQ9wo4/yDVHj6g22eJtwhjvxI28LbEdLaLki71A6IQxDKRs7t7WvuKnIKurU41SxDGnZy6YJ0gaIIzOpDIr1hgNAZeVv9X4nlyvwYz+cdq2UrvOd0e68hAuDunfvFYQivE5eZPcD60OfwN6l7JErTmHn5KhP4Wt3MLXhTuJM+FMwHPEapZ/+dOy41iW+JdsfsTKmYrQBe4zH2otxB3GN/AjDZ2I8yZKAPJwf7Pp/9AKppnQVdSYU6l+EgPviZhaUhskrV6bZrweENXyO8Ag+Ba5yl7Hv94Rwe3zJFo4k7FP/p+VeqIYuUHwXlF8E+Q/TZATCg5XC7uvl7xpw=='}
+        # {'Currency': '3fa53627-e658-457d-bcc4-1bca7f655ebc', 'BankSignature': 'BuIsDxUOMSoPmDQ0turs4/96cnwh0pf2GTDiJ+kFrA6ESFFiuINT95Q2+4igvHjIXUspA02dKfMIRn4GC1FYWRuIq8EiRiyYPYdYh2s4yGP3xiSSidcaG+jC80fADkV3OboTLfXIpqusSMk1k9W+xgc1q13EQ9noDBW0COFyYcxmLc71GCX8/UHT1x+1YDodgh7WMzJDlWT+BcC9Im11eeb7rhcOdteBJ3IbGUXlPuWke3Btrad78DRm541+VShdmIMrPxd0J5hwpH45TyTaKNOilP15B1BjoEO2Y+L0JO+CVo7V/PrmANwO+5OiuHAEGMhBmT86Dz6c1zmJSD4fQQ=='}, 
+        # {'Currency': '29f08f62-e702-4bad-adda-162851ffaaae', 'BankSignature': 'foxB3KMQ9wo4/yDVHj6g22eJtwhjvxI28LbEdLaLki71A6IQxDKRs7t7WvuKnIKurU41SxDGnZy6YJ0gaIIzOpDIr1hgNAZeVv9X4nlyvwYz+cdq2UrvOd0e68hAuDunfvFYQivE5eZPcD60OfwN6l7JErTmHn5KhP4Wt3MLXhTuJM+FMwHPEapZ/+dOy41iW+JdsfsTKmYrQBe4zH2otxB3GN/AjDZ2I8yZKAPJwf7Pp/9AKppnQVdSYU6l+EgPviZhaUhskrV6bZrweENXyO8Ag+Ba5yl7Hv94Rwe3zJFo4k7FP/p+VeqIYuUHwXlF8E+Q/TZATCg5XC7uvl7xpw=='}
     ]
 
     doubleSpendingRandomStrings= [
@@ -178,27 +178,3 @@ def doubleSpending():
     responseObeject =requestSessionObject.post(SendCurrencyToStoreURL,data={"CurrencyAndBankSignature":result,"HiddenUserInfoList":resultHiddenUserInfo})
     print(responseObeject.text)
 
-        
-
-
-
-
-
-    
-
-
-
-    
-    
-
-    
-
-
-
-if __name__ == '__main__':
-    for i in range(3):
-        currency=GetCurrency()
-        SendToStroe(currency)
-    # doubleSpending()
-    # print(randomString(36))
-    # print(StringXOR(randomString(36),randomString(36)))

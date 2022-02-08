@@ -30,7 +30,8 @@ Column('id', Integer, primary_key = True,autoincrement=True),
 Column('currency', String), 
 Column('deposited', Integer), 
 Column('hidden_user_info', String), 
-Column('binary_string', String)
+Column('binary_string', String),
+Column('double_spending', Integer)
 )
 
 def createNewDatabase():
@@ -119,6 +120,12 @@ def setCurrencyDeposited(currency:str,HiddenUserInfoListString:str):
     conn = engine.connect()
     conn.execute(s)
 
+def setCurrencyDoubleSpending(currency:str):
+    s=currencyTable.update().where(currencyTable.c.currency==currency).values(double_spending=1)
+    conn = engine.connect()
+    conn.execute(s)
+
+
 def getHiddenUserInfoByCurrency(currency:str):
     s=currencyTable.select().where(currencyTable.c.currency==currency)
     conn = engine.connect()
@@ -145,7 +152,27 @@ def getAllUserInfoForFrontEnd():
     return returnResult
 
 def getCurrencyInfoForFrontEnd():
-    s=currencyTable.select()
+    s=currencyTable.select().where(currencyTable.c.double_spending!=1)
+    conn = engine.connect()
+    results = conn.execute(s)
+    returnResult=list()
+    for result in results:
+        resultList=list(result)
+        isDeposited=""
+        if resultList[2]==1:isDeposited="Yes"
+        else:isDeposited="No"
+        
+        try:
+            HiddenUserInfoList=json.loads(resultList[3])
+            returnResult.append([resultList[1],HiddenUserInfoList[0][:30]+"...",isDeposited])
+        except:
+            returnResult.append([resultList[1],"Not Deposited Yet",isDeposited])
+            pass
+
+    return returnResult
+
+def getDoubleSpendingCurrencyInfoForFrontEnd():
+    s=currencyTable.select().where(currencyTable.c.double_spending==1)
     conn = engine.connect()
     results = conn.execute(s)
 

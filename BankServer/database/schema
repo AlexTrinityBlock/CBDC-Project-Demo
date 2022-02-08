@@ -12,5 +12,6 @@ CREATE TABLE CURRENCY(
    currency          TEXT                NOT NULL,
    deposited         INT     DEFAULT 0           ,
    hidden_user_info  TEXT                        ,
-   binary_string     TEXT                        
+   binary_string     TEXT                        ,
+   double_spending   INT     DEFAULT 0           
 );

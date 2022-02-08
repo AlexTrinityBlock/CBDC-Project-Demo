@@ -25,7 +25,8 @@ def homePage():
     NotDepositedYetCurrencys=SQLiteUtil.getCurrencyNotYetDepositForFrontEnd()
     CurrencysDeposited=SQLiteUtil.getCurrencyDepositedForFrontEnd()
     CurrencyDepositFail=SQLiteUtil.getCurrencyDepositFailForFrontEnd()
-    return render_template('index.html',NotDepositedYetCurrencys=NotDepositedYetCurrencys,CurrencysDeposited=CurrencysDeposited,CurrencyDepositFail=CurrencyDepositFail) 
+    binaryStrings = SQLiteUtil.getBinaryStringForFrontEnd()
+    return render_template('index.html',NotDepositedYetCurrencys=NotDepositedYetCurrencys,CurrencysDeposited=CurrencysDeposited,CurrencyDepositFail=CurrencyDepositFail,binaryStrings=binaryStrings) 
 
 @app.route('/deposit',methods=['GET'])
 def deposit():
@@ -46,6 +47,7 @@ def StartTransaction():
     session["ClientStart"]=None
     session["ClientStart"]="True"
     session["RandomBinaryString"]=VerifyUtil.randomBinaryString(10)
+    SQLiteUtil.insertBinaryString(session["RandomBinaryString"])
     return session["RandomBinaryString"]
 
 @app.route('/get-currency',methods=['POST'])

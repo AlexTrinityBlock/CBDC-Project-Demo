@@ -94,6 +94,22 @@
             </tbody>
         </table>
 
+        <h3>商店使用過的二進制字串</h3>
+        <table class="table table-dark">
+            <thead>
+                <tr>
+                    <th scope="col" class="bg-secondary">二進制字串</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for binaryString in binaryStrings %}
+                <tr>
+                    <th class="bg-secondary">{{ binaryString}}</th>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
     </div>
 
 </body>

@@ -26,8 +26,9 @@ def homePage():
     #User Info
     UsersInfo:list=SQLiteUtil.getAllUserInfoForFrontEnd()
     CurrencysInfo:list=SQLiteUtil.getCurrencyInfoForFrontEnd()
+    DoubleSpendingCurrencysInfo:list=SQLiteUtil.getDoubleSpendingCurrencyInfoForFrontEnd()
     DoubleSpendingUsersInfo:list=SQLiteUtil.getDoubleSpendingUserInfoForFrontEnd()
-    return render_template('index.html',UsersInfo=UsersInfo,CurrencysInfo=CurrencysInfo,DoubleSpendingUsersInfo=DoubleSpendingUsersInfo) 
+    return render_template('index.html',UsersInfo=UsersInfo,CurrencysInfo=CurrencysInfo,DoubleSpendingUsersInfo=DoubleSpendingUsersInfo,DoubleSpendingCurrencysInfo=DoubleSpendingCurrencysInfo) 
 
 @app.route('/user',methods=['GET'])
 def userPage():
@@ -43,7 +44,8 @@ def userAPI():
 @app.route('/double-spenddig',methods=['GET'])
 def doubleSpenddigAPI():
     import Client
-    Client.doubleSpending()
+    for i in range(2):
+        Client.doubleSpending()
     return redirect('/user')
 
 @app.route('/public-key/user/withdraw',methods=['GET'])
@@ -109,10 +111,16 @@ def deposit():
         print("Coin: ",Currency,"is Deposited")
         double_spendiner=VerifyUtil.findUserInfoFromHiddenInfoByCurrency(Currency,HiddenUserInfoList)
         SQLiteUtil.setDoubleSpenderbyUserID(double_spendiner)
+        SQLiteUtil.setCurrencyDoubleSpending(Currency)
         return "Fail"
     else:
         SQLiteUtil.setCurrencyDeposited(Currency,HiddenUserInfoList)
         return "Success"
+
+@app.route('/refresh-database',methods=['POST'])
+def refreshDatabase():
+    SQLiteUtil.createNewDatabase()
+    return redirect('/user')
 
 if __name__ == '__main__':
     app.run()

@@ -23,6 +23,12 @@ Column('deposited', Integer),
 Column('deposit_fail', Integer)
 )
 
+binaryStringTable = Table(
+'BINARYSTRINGS', meta, 
+Column('id', Integer, primary_key = True,autoincrement=True), 
+Column('binary_string', String),
+)
+
 def createNewDatabase():
     if os.path.isfile("./database/store.db"):
         os.remove("./database/store.db")        
@@ -32,11 +38,16 @@ def createNewDatabase():
     conn=None
     conn = sqlite3.connect("./database/store.db")
     c = conn.cursor()
-    c.execute(SQLQuery)
+    c.executescript(SQLQuery)
     conn.close()
 
 def insertTrade(hidden_user_info_i:str,digital_currency_i:str):
     ins = storeWalletTable.insert().values(hidden_user_info=hidden_user_info_i,digital_currency=digital_currency_i)
+    conn = engine.connect()
+    conn.execute(ins)
+
+def insertBinaryString(binary_string_i:str):
+    ins = binaryStringTable.insert().values(binary_string=binary_string_i)
     conn = engine.connect()
     conn.execute(ins)
 
@@ -98,6 +109,15 @@ def getCurrencyDepositFailForFrontEnd():
         currency=result[2]
         hiddenUserInfo=json.loads(result[1])
         hiddenUserInfo=hiddenUserInfo[0][:30]+"..."
-        resultList=list(result)
         returnResult.append([currency,hiddenUserInfo])
+    return returnResult
+
+def getBinaryStringForFrontEnd():
+    s=binaryStringTable.select()
+    conn = engine.connect()
+    results = conn.execute(s)
+    returnResult=list()
+    for result in results:
+        binaryString=result[1]
+        returnResult.append(binaryString)
     return returnResult
