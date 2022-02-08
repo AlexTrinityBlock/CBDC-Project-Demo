@@ -117,10 +117,12 @@ def deposit():
         SQLiteUtil.setCurrencyDeposited(Currency,HiddenUserInfoList)
         return "Success"
 
-@app.route('/refresh-database',methods=['POST'])
+@app.route('/refresh-database',methods=['GET'])
 def refreshDatabase():
     SQLiteUtil.createNewDatabase()
-    return redirect('/user')
+    SQLiteUtil.creatExampleUser()
+    SQLiteUtil.insertNewCurrency("5d37e4ff-9549-4569-9fb5-1d35e5801c3a")
+    return redirect("/")
 
 if __name__ == '__main__':
     app.run()
