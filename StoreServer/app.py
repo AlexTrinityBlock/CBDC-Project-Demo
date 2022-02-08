@@ -64,6 +64,10 @@ def getCurrency():
         SQLiteUtil.insertTrade(HiddenUserInfoList,currency)
     return '{"Status":"Sucsess"}'
 
+@app.route('/refresh-database',methods=['GET'])
+def refreshDatabase():
+    SQLiteUtil.createNewDatabase()
+    return redirect("/")
 
 if __name__ == '__main__':
     app.run()
